@@ -105,20 +105,26 @@ int main(int argc, char *argv[])
 ///////////////////////////////////////////////////////////////////////////////
   /* キーボードから文字列を入力してサーバに送信 */
 //  fgets(k_buf,BUFSIZE,stdin); 
-  sprintf(k_buf,"GET %s HTTP/1.1",url);
-  snprintf(s_buf, BUFSIZE, "%s\r\n",k_buf); /* HTTPの改行コードは \r\n */
- // printf("%s",s_buf);
- 
+//  sprintf(s_buf,"HEAD %s HTTP/1.1\r\n",url);
+  sprintf(s_buf,"HEAD / HTTP/1.1\r\n");
+//  sprintf(k_buf,"HEAD HTTP/1.1");
+//  snprintf(s_buf, BUFSIZE, "%s\r\n",k_buf); /* HTTPの改行コードは \r\n */
+  printf("\n\n%s",s_buf);
+  strsize = strlen(s_buf);
   if(send(tcpsock, s_buf, strsize,0) == -1 ){
       fprintf(stderr,"send()1");
       exit(EXIT_FAILURE);
   }
   
 
-  sprintf(k_buf,"Host:%s",proxyname);
-  snprintf(s_buf, BUFSIZE, "%s\r\n",k_buf); /* HTTPの改行コードは \r\n */
-//  printf("%s",s_buf);
-
+//  sprintf(k_buf,"Host:%s",proxyname);
+  sprintf(s_buf,"Host:%s\r\n",proxyname);
+//  sprintf(k_buf,"Host:%s",url);
+//  snprintf(s_buf, BUFSIZE, "%s\r\n",k_buf); /* HTTPの改行コードは \r\n */
+//  sprintf(s_buf,"HEAD %s HTTP\1.0\n");
+  printf("%s\n\n",s_buf);
+  strsize = strlen(s_buf);
+//  printf("%d\n",strsize);
   if(send(tcpsock, s_buf, strsize,0) == -1 ){
       fprintf(stderr,"send()2");
       exit(EXIT_FAILURE);
@@ -126,7 +132,7 @@ int main(int argc, char *argv[])
   
 
 
-  send(tcpsock, "\r\n", 4, 0); /* HTTPのメソッド（コマンド）の終わりは空行 */
+  send(tcpsock, "\r\n", 2, 0); /* HTTPのメソッド（コマンド）の終わりは空行 */
 
   /* サーバから文字列を受信する */
   if((strsize=recv(tcpsock, r_buf, BUFSIZE-1,0)) == -1){
