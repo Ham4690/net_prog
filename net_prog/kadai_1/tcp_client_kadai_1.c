@@ -33,14 +33,8 @@ int main(int argc, char *argv[])
   int strsize;
   char *tp;  
   size_t length;
-  int count = 0;
-  
+  char url[BUFSIZE]; 
 
-/*
-  proxyname = argv[2];
-  printf("%s\n",proxyname);
-  printf("%d \n",PROXYPORT);
-*/
 
 
   //引数の要素数確認
@@ -55,15 +49,14 @@ int main(int argc, char *argv[])
   //引数の数によっての処理判別
   switch(argc){
     case 2://第2引数および第3引数が指定されていない場合
+      sprintf(url,"%s",argv[1]);
+//      puts( url );
       tp = argv[1];
       strtok(tp,"/");
       proxyname = strtok( NULL,"/");
-//        if (proxyname != NULL ) puts( proxyname);
-//      printf("%d\n",strlen(adr1));
+
       printf("%s\n",proxyname);
-//      proxyname = "www.is.kit.ac.jp";
       PROXYPORT = 80;
-      exit(EXIT_FAILURE);
  
       /* サーバ名をアドレス(hostent構造体)に変換する */
       if((server_host = gethostbyname( proxyname ) ) == NULL){
@@ -88,7 +81,6 @@ int main(int argc, char *argv[])
   }
   printf(" proxyname=%s,PROXYPORT=%d\n",proxyname,PROXYPORT);
 
-  exit(EXIT_FAILURE);
 
   /* サーバの情報をsockaddr_in構造体に格納する */
   memset(&proxy_adrs, 0, sizeof(proxy_adrs));
@@ -112,25 +104,26 @@ int main(int argc, char *argv[])
 
 ///////////////////////////////////////////////////////////////////////////////
   /* キーボードから文字列を入力してサーバに送信 */
-  fgets(k_buf,BUFSIZE,stdin); 
-
-  while( k_buf[0] != '\n' ){ /* 空行が入力されるまで繰り返し */
-
-    strsize = strlen(k_buf);
-    k_buf[strsize-1] = 0;   /* 末尾の改行コードを消す */
-    snprintf(s_buf, BUFSIZE, "%s\r\n",k_buf); /* HTTPの改行コードは \r\n */
-
-    /* 文字列をサーバに送信する */
-    if(send(tcpsock, s_buf, strsize,0) == -1 ){
-      fprintf(stderr,"send()");
+//  fgets(k_buf,BUFSIZE,stdin); 
+  sprintf(k_buf,"GET %s HTTP/1.1",url);
+  snprintf(s_buf, BUFSIZE, "%s\r\n",k_buf); /* HTTPの改行コードは \r\n */
+ // printf("%s",s_buf);
+ 
+  if(send(tcpsock, s_buf, strsize,0) == -1 ){
+      fprintf(stderr,"send()1");
       exit(EXIT_FAILURE);
-    }
-  fgets(k_buf,BUFSIZE,stdin); 
+  }
+  
 
- }
-///////////////////////////////////////////////////////////////////////////////
+  sprintf(k_buf,"Host:%s",proxyname);
+  snprintf(s_buf, BUFSIZE, "%s\r\n",k_buf); /* HTTPの改行コードは \r\n */
+//  printf("%s",s_buf);
 
-
+  if(send(tcpsock, s_buf, strsize,0) == -1 ){
+      fprintf(stderr,"send()2");
+      exit(EXIT_FAILURE);
+  }
+  
 
 
   send(tcpsock, "\r\n", 4, 0); /* HTTPのメソッド（コマンド）の終わりは空行 */
