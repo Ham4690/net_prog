@@ -12,10 +12,12 @@
 #include <string.h>
 #include <unistd.h>
 
-#define PROXYPORT 8080  /* プロキシサーバのポート番号 */
+//#define PROXYPORT 8080  /* プロキシサーバのポート番号 */
 #define BUFSIZE 1024    /* バッファサイズ */
 
-
+// ./kadai_1 http://www.is.kit.ac.jp/ 
+//or
+// ./kadai_1 http://www.is.kit.ac.jp/ proxy.cis.kit.ac.jp 8080
 
 int main(int argc, char *argv[])
 {
@@ -23,18 +25,23 @@ int main(int argc, char *argv[])
   struct sockaddr_in proxy_adrs;
 
   int tcpsock;
-
-  char proxyname[] = "proxy.cis.kit.ac.jp"; /* プロキシサーバ */
+  int PROXYPORT;
+//  char proxyname[] = "proxy.cis.kit.ac.jp"; /* プロキシサーバ */
+  char *word;
+  char *proxyname; /* プロキシサーバ */
   char k_buf[BUFSIZE], s_buf[BUFSIZE], r_buf[BUFSIZE];
   int strsize;
-  
+  char *tp;  
   size_t length;
+  int count = 0;
+  
 
-  /* サーバ名をアドレス(hostent構造体)に変換する */
-  if((server_host = gethostbyname( proxyname ) ) == NULL){
-    fprintf(stderr,"gethostbyname()");
-    exit(EXIT_FAILURE);
-  }
+/*
+  proxyname = argv[2];
+  printf("%s\n",proxyname);
+  printf("%d \n",PROXYPORT);
+*/
+
 
   //引数の要素数確認
   if(argc>4){
@@ -44,6 +51,44 @@ int main(int argc, char *argv[])
     printf("Not enough number of argument \n");
     exit(EXIT_FAILURE);
   }
+
+  //引数の数によっての処理判別
+  switch(argc){
+    case 2://第2引数および第3引数が指定されていない場合
+      tp = argv[1];
+      strtok(tp,"/");
+      proxyname = strtok( NULL,"/");
+//        if (proxyname != NULL ) puts( proxyname);
+//      printf("%d\n",strlen(adr1));
+      printf("%s\n",proxyname);
+//      proxyname = "www.is.kit.ac.jp";
+      PROXYPORT = 80;
+      exit(EXIT_FAILURE);
+ 
+      /* サーバ名をアドレス(hostent構造体)に変換する */
+      if((server_host = gethostbyname( proxyname ) ) == NULL){
+        fprintf(stderr,"gethostbyname()");
+        exit(EXIT_FAILURE);
+      }
+      break;
+
+    case 4://引数が指定されている場合
+      proxyname = argv[2];
+      sscanf(argv[3],"%d",&PROXYPORT);
+
+      /* サーバ名をアドレス(hostent構造体)に変換する */
+      if((server_host = gethostbyname( proxyname ) ) == NULL){
+        fprintf(stderr,"gethostbyname()");
+        exit(EXIT_FAILURE);
+      }
+      break;
+
+    default :
+      break;
+  }
+  printf(" proxyname=%s,PROXYPORT=%d\n",proxyname,PROXYPORT);
+
+  exit(EXIT_FAILURE);
 
   /* サーバの情報をsockaddr_in構造体に格納する */
   memset(&proxy_adrs, 0, sizeof(proxy_adrs));
@@ -84,6 +129,9 @@ int main(int argc, char *argv[])
 
  }
 ///////////////////////////////////////////////////////////////////////////////
+
+
+
 
   send(tcpsock, "\r\n", 4, 0); /* HTTPのメソッド（コマンド）の終わりは空行 */
 
