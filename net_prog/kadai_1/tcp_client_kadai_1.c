@@ -15,7 +15,9 @@
 #define PROXYPORT 8080  /* プロキシサーバのポート番号 */
 #define BUFSIZE 1024    /* バッファサイズ */
 
-int main()
+
+
+int main(int argc, char *argv[])
 {
   struct hostent *server_host;
   struct sockaddr_in proxy_adrs;
@@ -31,6 +33,15 @@ int main()
   /* サーバ名をアドレス(hostent構造体)に変換する */
   if((server_host = gethostbyname( proxyname ) ) == NULL){
     fprintf(stderr,"gethostbyname()");
+    exit(EXIT_FAILURE);
+  }
+
+  //引数の要素数確認
+  if(argc>4){
+    printf("Number of argument is too many \n");
+    exit(EXIT_FAILURE);
+  }else if((argc%2)!=0){
+    printf("Not enough number of argument \n");
     exit(EXIT_FAILURE);
   }
 
@@ -53,8 +64,8 @@ int main()
     exit(EXIT_FAILURE);
   }
 
-///////////////////////////////////////////////////////////////////////////////
 
+///////////////////////////////////////////////////////////////////////////////
   /* キーボードから文字列を入力してサーバに送信 */
   fgets(k_buf,BUFSIZE,stdin); 
 
@@ -72,8 +83,7 @@ int main()
   fgets(k_buf,BUFSIZE,stdin); 
 
  }
-
-printf("test\n");
+///////////////////////////////////////////////////////////////////////////////
 
   send(tcpsock, "\r\n", 4, 0); /* HTTPのメソッド（コマンド）の終わりは空行 */
 
