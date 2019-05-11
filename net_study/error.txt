@@ -1,0 +1,35 @@
+tcp_client.c: In function ‘tcp_send_msg’:
+tcp_client.c:42:9: warning: implicit declaration of function ‘sprintf’ [-Wimplicit-function-declaration]
+         sprintf(errmsg, "(line:%d) %s", __LINE__, strerror(errno));
+         ^~~~~~~
+tcp_client.c:42:9: warning: incompatible implicit declaration of built-in function ‘sprintf’
+tcp_client.c:42:9: note: include ‘<stdio.h>’ or provide a declaration of ‘sprintf’
+tcp_client.c:49:9: warning: incompatible implicit declaration of built-in function ‘sprintf’
+         sprintf(errmsg, "(line:%d) %s", __LINE__, strerror(errno));
+         ^~~~~~~
+tcp_client.c:49:9: note: include ‘<stdio.h>’ or provide a declaration of ‘sprintf’
+tcp_client.c: In function ‘tcp_client’:
+tcp_client.c:72:9: warning: incompatible implicit declaration of built-in function ‘sprintf’
+         sprintf(errmsg, "(line:%d) %s", __LINE__, strerror(errno));
+         ^~~~~~~
+tcp_client.c:72:9: note: include ‘<stdio.h>’ or provide a declaration of ‘sprintf’
+tcp_client.c: In function ‘initialize’:
+tcp_client.c:103:9: warning: incompatible implicit declaration of built-in function ‘sprintf’
+         sprintf(errmsg, "Usage: %s <ip-addr> <port> <msg>", argv[0]);
+         ^~~~~~~
+tcp_client.c:103:9: note: include ‘<stdio.h>’ or provide a declaration of ‘sprintf’
+tcp_client.c: In function ‘main’:
+tcp_client.c:128:9: warning: implicit declaration of function ‘fprintf’ [-Wimplicit-function-declaration]
+         fprintf(stderr, "Error: %s\n", errmsg);
+         ^~~~~~~
+tcp_client.c:128:9: warning: incompatible implicit declaration of built-in function ‘fprintf’
+tcp_client.c:128:9: note: include ‘<stdio.h>’ or provide a declaration of ‘fprintf’
+tcp_client.c:128:17: error: ‘stderr’ undeclared (first use in this function); did you mean ‘opterr’?
+         fprintf(stderr, "Error: %s\n", errmsg);
+                 ^~~~~~
+                 opterr
+tcp_client.c:128:17: note: each undeclared identifier is reported only once for each function it appears in
+tcp_client.c:134:9: warning: incompatible implicit declaration of built-in function ‘fprintf’
+         fprintf(stderr, "Error: %s\n", errmsg);
+         ^~~~~~~
+tcp_client.c:134:9: note: include ‘<stdio.h>’ or provide a declaration of ‘fprintf’
