@@ -12,12 +12,15 @@
 #include <string.h>
 #include <unistd.h>
 
-//#define PROXYPORT 8080  /* プロキシサーバのポート番号 */
 #define BUFSIZE 1024    /* バッファサイズ */
 
 // ./kadai_1 http://www.is.kit.ac.jp/ 
 //or
 // ./kadai_1 http://www.is.kit.ac.jp/ proxy.cis.kit.ac.jp 8080
+struct FLAG{
+  bool flag_server_name;
+  bool flag_content_length;
+};
 
 int main(int argc, char *argv[])
 {
@@ -152,11 +155,13 @@ while( tp != NULL ){
 //      puts(tp);
 //      printf(tp == "Server");
     if( strncmp(cmp_word,"Content-Length",14) == 0){
+      tp = strtok(NULL,": \n");
       printf("cmp_word = %s,strlen=%lu\n",cmp_word,strlen(cmp_word));
-      printf("1/////////////////////\n");
+      printf("%s:%s\n",cmp_word,tp);
     }else if( strncmp(cmp_word,"Server",4) == 0 ){
+      tp = strtok(NULL,": \n");
       printf("cmp_word = %s,strlen=%lu\n",cmp_word,strlen(cmp_word));
-      printf("2/////////////////////\n");
+      printf("%s:%s\n",cmp_word,tp);
     }
   }
 
