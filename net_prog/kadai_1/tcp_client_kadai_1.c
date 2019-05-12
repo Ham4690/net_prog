@@ -11,6 +11,7 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdbool.h>
 
 #define BUFSIZE 1024    /* バッファサイズ */
 
@@ -106,9 +107,6 @@ int main(int argc, char *argv[])
     exit(EXIT_FAILURE);
   }
 
-
-///////////////////////////////////////////////////////////////////////////////
-  /* キーボードから文字列を入力してサーバに送信 */
   sprintf(s_buf,"HEAD / HTTP/1.1\r\n");
   printf("\n\n%s",s_buf);
   strsize = strlen(s_buf);
@@ -116,7 +114,6 @@ int main(int argc, char *argv[])
       fprintf(stderr,"send()1");
       exit(EXIT_FAILURE);
   }
-  
 
   sprintf(s_buf,"Host:%s\r\n",proxyname);
   printf("%s\n\n",s_buf);
@@ -139,11 +136,11 @@ int main(int argc, char *argv[])
 
 //受信した文字列の選別
 
-printf("%s\n\n",r_buf);
+//printf("%s\n\n",r_buf);
 
 tp = strtok( r_buf,": \n");
 sprintf(cmp_word,"%s",tp);
-puts(cmp_word);
+//puts(cmp_word);
 //printf("cmp_word=%s\n",cmp_word);
 //printf("%d\n",strncmp(cmp_word,"HTTP/1.1",8));
 
@@ -155,19 +152,27 @@ while( tp != NULL ){
 //      puts(tp);
 //      printf(tp == "Server");
     if( strncmp(cmp_word,"Content-Length",14) == 0){
+      flag_content_length = true;
       tp = strtok(NULL,": \n");
-      printf("cmp_word = %s,strlen=%lu\n",cmp_word,strlen(cmp_word));
+//      printf("cmp_word = %s,strlen=%lu\n",cmp_word,strlen(cmp_word));
       printf("%s:%s\n",cmp_word,tp);
     }else if( strncmp(cmp_word,"Server",4) == 0 ){
+      flag_server_name = true;
       tp = strtok(NULL,": \n");
-      printf("cmp_word = %s,strlen=%lu\n",cmp_word,strlen(cmp_word));
+//      printf("cmp_word = %s,strlen=%lu\n",cmp_word,strlen(cmp_word));
       printf("%s:%s\n",cmp_word,tp);
     }
   }
 
 } 
   
+  if(flag_content_length==false){
+    printf("Content-Length is not found\n");
+  }
 
+  if(flag_server_name==false){
+    printf("Server_name is not found\n");
+  }
                         
 
  /* 受信した文字列を画面に書く */
