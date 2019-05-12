@@ -15,6 +15,7 @@
 
 #define BUFSIZE 1024    /* バッファサイズ */
 
+//入力の例
 // ./kadai_1 http://www.is.kit.ac.jp/ 
 //or
 // ./kadai_1 http://www.is.kit.ac.jp/ proxy.cis.kit.ac.jp 8080
@@ -34,7 +35,6 @@ int main(int argc, char *argv[])
   char *tp;  
   size_t length;
   char url[BUFSIZE]; 
-//  char server_name[];
   int conten_len;
   char cmp_word[BUFSIZE];
 
@@ -56,7 +56,6 @@ int main(int argc, char *argv[])
   switch(argc){
     case 2://第2引数および第3引数が指定されていない場合
       sprintf(url,"%s",argv[1]);
-//      puts( url );
       tp = argv[1];
       strtok(tp,"/");
       proxyname = strtok( NULL,"/");
@@ -136,47 +135,37 @@ int main(int argc, char *argv[])
 
 //受信した文字列の選別
 
-//printf("%s\n\n",r_buf);
 
 tp = strtok( r_buf,": \n");
 sprintf(cmp_word,"%s",tp);
-//puts(cmp_word);
-//printf("cmp_word=%s\n",cmp_word);
-//printf("%d\n",strncmp(cmp_word,"HTTP/1.1",8));
 
 while( tp != NULL ){
   tp = strtok(NULL,": \n");
   if( tp != NULL ){
     sprintf(cmp_word,"%s",tp);
-//    printf("cmp_word = %s,strlen=%d\n",cmp_word,strlen(cmp_word));
-//      puts(tp);
-//      printf(tp == "Server");
     if( strncmp(cmp_word,"Content-Length",14) == 0){
       flag_content_length = true;
       tp = strtok(NULL,": \n");
-//      printf("cmp_word = %s,strlen=%lu\n",cmp_word,strlen(cmp_word));
       printf("%s:%s\n",cmp_word,tp);
     }else if( strncmp(cmp_word,"Server",4) == 0 ){
       flag_server_name = true;
       tp = strtok(NULL,": \n");
-//      printf("cmp_word = %s,strlen=%lu\n",cmp_word,strlen(cmp_word));
       printf("%s:%s\n",cmp_word,tp);
     }
   }
 
 } 
   
-  if(flag_content_length==false){
-    printf("Content-Length is not found\n");
-  }
+//content-length,serverがない場合の出力
+if(flag_content_length==false){
+  printf("Content-Length is not found\n");
+}
 
-  if(flag_server_name==false){
-    printf("Server_name is not found\n");
-  }
+if(flag_server_name==false){
+  printf("Server_name is not found\n");
+}
                         
 
- /* 受信した文字列を画面に書く */
-//  printf("%s",r_buf);
 
   close(tcpsock);             /* ソケットを閉じる */
   exit(EXIT_SUCCESS);
