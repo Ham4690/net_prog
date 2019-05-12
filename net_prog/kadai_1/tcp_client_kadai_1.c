@@ -26,7 +26,6 @@ int main(int argc, char *argv[])
 
   int tcpsock;
   int PROXYPORT;
-//  char proxyname[] = "proxy.cis.kit.ac.jp"; /* プロキシサーバ */
   char *word;
   char *proxyname; /* プロキシサーバ */
   char k_buf[BUFSIZE], s_buf[BUFSIZE], r_buf[BUFSIZE];
@@ -34,6 +33,9 @@ int main(int argc, char *argv[])
   char *tp;  
   size_t length;
   char url[BUFSIZE]; 
+//  char server_name[];
+  int conten_len;
+  char cmp_word[BUFSIZE];
 
 
 
@@ -79,8 +81,8 @@ int main(int argc, char *argv[])
     default :
       break;
   }
-  printf(" proxyname=%s,PROXYPORT=%d\n",proxyname,PROXYPORT);
 
+  printf("proxyname=%s,PROXYPORT=%d\n",proxyname,PROXYPORT);
 
   /* サーバの情報をsockaddr_in構造体に格納する */
   memset(&proxy_adrs, 0, sizeof(proxy_adrs));
@@ -104,11 +106,7 @@ int main(int argc, char *argv[])
 
 ///////////////////////////////////////////////////////////////////////////////
   /* キーボードから文字列を入力してサーバに送信 */
-//  fgets(k_buf,BUFSIZE,stdin); 
-//  sprintf(s_buf,"HEAD %s HTTP/1.1\r\n",url);
   sprintf(s_buf,"HEAD / HTTP/1.1\r\n");
-//  sprintf(k_buf,"HEAD HTTP/1.1");
-//  snprintf(s_buf, BUFSIZE, "%s\r\n",k_buf); /* HTTPの改行コードは \r\n */
   printf("\n\n%s",s_buf);
   strsize = strlen(s_buf);
   if(send(tcpsock, s_buf, strsize,0) == -1 ){
@@ -117,14 +115,9 @@ int main(int argc, char *argv[])
   }
   
 
-//  sprintf(k_buf,"Host:%s",proxyname);
   sprintf(s_buf,"Host:%s\r\n",proxyname);
-//  sprintf(k_buf,"Host:%s",url);
-//  snprintf(s_buf, BUFSIZE, "%s\r\n",k_buf); /* HTTPの改行コードは \r\n */
-//  sprintf(s_buf,"HEAD %s HTTP\1.0\n");
   printf("%s\n\n",s_buf);
   strsize = strlen(s_buf);
-//  printf("%d\n",strsize);
   if(send(tcpsock, s_buf, strsize,0) == -1 ){
       fprintf(stderr,"send()2");
       exit(EXIT_FAILURE);
@@ -141,12 +134,39 @@ int main(int argc, char *argv[])
   }
   r_buf[strsize] = '\0';
 
+//受信した文字列の選別
+
+printf("%s\n\n",r_buf);
+
+tp = strtok( r_buf,": \n");
+sprintf(cmp_word,"%s",tp);
+puts(cmp_word);
+//printf("cmp_word=%s\n",cmp_word);
+//printf("%d\n",strncmp(cmp_word,"HTTP/1.1",8));
+
+while( tp != NULL ){
+  tp = strtok(NULL,": \n");
+  if( tp != NULL ){
+    sprintf(cmp_word,"%s",tp);
+//    printf("cmp_word = %s,strlen=%d\n",cmp_word,strlen(cmp_word));
+//      puts(tp);
+//      printf(tp == "Server");
+    if( strncmp(cmp_word,"Content-Length",14) == 0){
+      printf("cmp_word = %s,strlen=%lu\n",cmp_word,strlen(cmp_word));
+      printf("1/////////////////////\n");
+    }else if( strncmp(cmp_word,"Server",4) == 0 ){
+      printf("cmp_word = %s,strlen=%lu\n",cmp_word,strlen(cmp_word));
+      printf("2/////////////////////\n");
+    }
+  }
+
+} 
   
 
                         
 
  /* 受信した文字列を画面に書く */
-  printf("%s",r_buf);
+//  printf("%s",r_buf);
 
   close(tcpsock);             /* ソケットを閉じる */
   exit(EXIT_SUCCESS);
