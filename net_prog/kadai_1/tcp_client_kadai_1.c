@@ -17,10 +17,7 @@
 // ./kadai_1 http://www.is.kit.ac.jp/ 
 //or
 // ./kadai_1 http://www.is.kit.ac.jp/ proxy.cis.kit.ac.jp 8080
-struct FLAG{
-  bool flag_server_name;
-  bool flag_content_length;
-};
+
 
 int main(int argc, char *argv[])
 {
@@ -39,6 +36,9 @@ int main(int argc, char *argv[])
 //  char server_name[];
   int conten_len;
   char cmp_word[BUFSIZE];
+
+  bool flag_server_name = false;
+  bool flag_content_length = false;
 
 
 
