@@ -49,14 +49,16 @@ void cmd_exit(int sock_accepted){
 }
 
 
-void judge_code(int sock_accepted,char *buf){
-  printf("%s\n",buf);
+void judge_code(int sock_accepted,char *buf[2]){
+  
+  printf("%s\n",buf[0]);
+  printf("%s\n",buf[1]);
 
-  if( (strcmp(buf,"list") == 0)){
+  if( (strcmp(buf[0],"list") == 0)){
     cmd_list(sock_accepted);
-  }else if( (strcmp(buf,"type") == 0)){
+  }else if( (strcmp(buf[0],"type") == 0)){
 //  type()
-  }else if( (strcmp(buf,"exit") == 0)){
+  }else if( (strcmp(buf[0],"exit") == 0)){
     cmd_exit(sock_accepted);
   }
 
@@ -73,6 +75,7 @@ int main()
   char *op_token[2];
   int strsize;
   int arg_num=0;
+  char str = '>';
 
 
   sock_listen = init_tcpserver(PORT,5);
@@ -81,9 +84,11 @@ int main()
   sock_accepted = accept(sock_listen,NULL,NULL);
   close(sock_listen);
 
+
   do{
 
-    //server_send(sock_accepted, p,strsize);
+
+    server_send(sock_accepted,&str,1);
 
     /* 文字列をクライアントから受信する */
     if((strsize=recv(sock_accepted,buf,BUFSIZE,0)) == -1){
@@ -93,17 +98,10 @@ int main()
 
     separate_op(op_token,buf,arg_num);
 //    printf("%s %s\n",op_token[0],op_token[1]);
-    judge_code(sock_accepted,op_token[0]);
-//    list(sock_accepted);
+//    judge_code(sock_accepted,op_token[0]);
+    judge_code(sock_accepted,op_token);
 
 
-    /* 文字列をクライアントに送信する */
-    //server_send(sock_accepted, p,strsize);
 
   }while(1); /* 改行コードを受信するまで繰り返す */
-//  }while( buf[strsize-1] != '\n' ); /* 改行コードを受信するまで繰り返す */
-
-  close(sock_accepted);
-
-  exit(EXIT_SUCCESS);
 }
