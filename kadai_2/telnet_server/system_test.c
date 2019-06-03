@@ -3,9 +3,9 @@
 #include <string.h>
 
 int main(){
-  char *command = "ls";
-  char cmd[10];
-  char  *add = " -al";
+  char *command = "cat";
+  char cmd[100];
+  char  *add = " aaa.txt";
   int res;
   strcpy(cmd,command); 
   printf("command=%s\n",cmd);
