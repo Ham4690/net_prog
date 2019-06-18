@@ -1,0 +1,5 @@
+server:
+~$./quiz -S -p 50000 -c 3
+
+client:
+~$./quiz -C -s localhost -p 50000
