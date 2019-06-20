@@ -27,6 +27,7 @@ int main(int argc, char *argv[])
   while( 1 ){
 	  c = getopt(argc, argv, "SCs:p:c:h");
 	  if( c == -1 ) break;
+
 	  
 	  switch( c ){
 	  case 'S' :  /* サーバモードにする */
