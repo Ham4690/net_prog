@@ -27,6 +27,7 @@ static char Buf[BUFLEN];     /* 通信用バッファ */
 static int client_login(int sock_listen);
 static void recv_msg();
 static void start_chat();
+static void client_delete();
 static char *chop_nl(char *s);
 
 void init_client(int sock_listen, int n_client)
@@ -121,6 +122,7 @@ static void recv_msg()
   int client_id;
   int answered;
   int strsize;
+  int i;
   static char right_ans[]="Your answer is right!\n";
   static char wrong_ans[]="Your answer is wrong. Answer again.\n";
 
@@ -145,31 +147,25 @@ static void recv_msg()
       if( FD_ISSET(Client[client_id].sock, &readfds) ){
 
         strsize = Recv(Client[client_id].sock, Buf, BUFLEN-1,0);
+        if( strsize == 0 ){
+          client_delete(mask,client_id);
+        //   FD_CLR(Client[client_id].sock,&mask);
+        //   if(client_id != N_client-1){
+        //     for(i=client_id;i<N_client-1;i++){
+        //       Client[i].sock = Client[i+1].sock;
+        //       strcpy(Client[i].name,Client[i+1].name);
+        //     }
+        //   }
+        //   N_client -= 1;
+         }else{
+          Buf[strsize]='\0';
+          send_msg(Buf,client_id);
+        }
 
-        Buf[strsize]='\0';
-
-        send_msg(Buf,client_id);
-        memset(&Buf[0],0x00,sizeof(Buf) );
-     }
+      }
     }
   }
 }
-
-// static void send_result()
-// {
-//   int rank, client_id;
-//   int len;
-
-//   for(rank=0; rank<N_client; rank++){
-//     /* 順位を表す文字列を作成 */
-//     len=snprintf(Buf, BUFLEN, "[%d]\t%s\n",rank+1,Client[ Ranking[rank]].name);
-
-//     /* 順位データを送信する */
-//     for(client_id=0; client_id<N_client; client_id++){
-//       Send(Client[client_id].sock, Buf, len, 0);
-//     }
-//   }
-// }
 
 static char *chop_nl(char *s)
 {
@@ -179,4 +175,16 @@ static char *chop_nl(char *s)
     s[len-1] = '\0';
   }
   return(s);
+}
+
+static void client_delete(fd_set mask,int client_id){
+  int i;
+  FD_CLR(Client[client_id].sock,&mask);
+  if(client_id != N_client-1){
+    for(i=client_id;i<N_client-1;i++){
+      Client[i].sock = Client[i+1].sock;
+      strcpy(Client[i].name,Client[i+1].name);
+    }
+  }
+  N_client--;
 }

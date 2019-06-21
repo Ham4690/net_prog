@@ -12,7 +12,6 @@
 void chat_client(char* servername, int port_number)
 {
   int sock;
-  int rc;
   char s_buf[S_BUFSIZE], r_buf[R_BUFSIZE];
   int strsize;
   fd_set mask, readfds;
@@ -37,6 +36,13 @@ void chat_client(char* servername, int port_number)
     if( FD_ISSET(0, &readfds) ){
       /* キーボードから文字列を入力する */
       fgets(s_buf, S_BUFSIZE, stdin);
+
+      if(strcmp(s_buf,"exit\n")==0){
+        printf("ok\n");
+        close(sock);
+        exit(1);
+      }
+
       strsize = strlen(s_buf);
       Send(sock, s_buf, strsize, 0);
 
@@ -47,17 +53,14 @@ void chat_client(char* servername, int port_number)
     if( FD_ISSET(sock,&readfds ) ){
       /* サーバから文字列を受信する */
       strsize = Recv(sock, r_buf, R_BUFSIZE-1, 0);
+      if(strsize == 0){
+        printf("\nserver error\n");
+        exit(1);
+      }
       r_buf[strsize] = '\0';
       printf("%s",r_buf);
       fflush(stdout); /* バッファの内容を強制的に出力 */
     }
-
-// printf("%d\n",FD_ISSET(sock,&readfds ));
-//     if((rc = read(sock,r_buf,sizeof(r_buf))) == 0){
-//       if((strsize=recv(sock,r_buf,R_BUFSIZE-1,0))== -1){
-//       exit_errmesg("recv()");
-//       }
-//     }
   }
 
 }
