@@ -1,7 +1,7 @@
 #ifndef QUIZ_H_
 #define QUIZ_H_
 /*
-  chat.h
+  quiz.h
 */
 #include "mynet.h"
 

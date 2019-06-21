@@ -1,5 +1,5 @@
-#ifndef QUIZ_H_
-#define QUIZ_H_
+#ifndef CHAT_H_
+#define CHAT_H_
 /*
   chat.h
 */
@@ -26,4 +26,4 @@ int Send(int s, void *buf, size_t len, int flags);
 /* 受信関数(エラー処理つき) */
 int Recv(int s, void *buf, size_t len, int flags);
 
-#endif /* QUIZ_H_ */
+#endif /* CHAT_H_ */

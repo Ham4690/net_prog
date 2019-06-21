@@ -1,7 +1,7 @@
 /*
   quiz.c
 */
-#include "chat.h"
+#include "quiz.h"
 #include "mynet.h"
 #include <stdlib.h>
 #include <unistd.h>

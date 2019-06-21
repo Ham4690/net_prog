@@ -1,7 +1,7 @@
 /*
   quiz_client.c
 */
-#include "chat.h"
+#include "quiz.h"
 #include "mynet.h"
 #include <stdlib.h>
 #include <sys/select.h>
@@ -43,6 +43,11 @@ void quiz_client(char* servername, int port_number)
     if( FD_ISSET(sock,&readfds ) ){
       /* サーバから文字列を受信する */
       strsize = Recv(sock, r_buf, R_BUFSIZE-1, 0);
+      if(strsize == 0){
+        printf("server exit\n");
+        fflush(stdout); /* バッファの内容を強制的に出力 */
+        exit(1);
+      }
       r_buf[strsize] = '\0';
       printf("%s",r_buf);
       fflush(stdout); /* バッファの内容を強制的に出力 */

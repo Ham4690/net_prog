@@ -2,7 +2,7 @@
   quiz_util.c
 */
 #include "mynet.h"
-#include "chat.h"
+#include "quiz.h"
 #include <stdlib.h>
 #include <sys/select.h>
 
