@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-void quiz_server(int port_number, int n_client)
+void chat_server(int port_number, int n_client)
 {
   int sock_listen;
 
