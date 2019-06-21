@@ -1,11 +1,11 @@
 #CC := gcc
 MYLIBD = -lmynet
-CFLAGS := -I../mynet -L../mynet
+CFLAGS := -Wall -Wextra -I../mynet -L../mynet
 
-all:kadai_3
+all:kadai_3_a
 
-kadai_3:kadai_3.c
+kadai_3_a:kadai_3_a.c
 	${CC} ${CFLAGS} -o $@ $^ ${MYLIBD}
 
 clean:
-	${RM} kadai_3*
+	${RM} kadai_3_a*

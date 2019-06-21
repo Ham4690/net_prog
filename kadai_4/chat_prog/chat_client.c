@@ -1,5 +1,5 @@
 /*
-  quiz_client.c
+  chat_client.c
 */
 #include "chat.h"
 #include "mynet.h"
@@ -9,9 +9,10 @@
 #define S_BUFSIZE 100   /* 送信用バッファサイズ */
 #define R_BUFSIZE 100   /* 受信用バッファサイズ */
 
-void quiz_client(char* servername, int port_number)
+void chat_client(char* servername, int port_number)
 {
   int sock;
+  int rc;
   char s_buf[S_BUFSIZE], r_buf[R_BUFSIZE];
   int strsize;
   fd_set mask, readfds;
@@ -51,6 +52,12 @@ void quiz_client(char* servername, int port_number)
       fflush(stdout); /* バッファの内容を強制的に出力 */
     }
 
+// printf("%d\n",FD_ISSET(sock,&readfds ));
+//     if((rc = read(sock,r_buf,sizeof(r_buf))) == 0){
+//       if((strsize=recv(sock,r_buf,R_BUFSIZE-1,0))== -1){
+//       exit_errmesg("recv()");
+//       }
+//     }
   }
 
 }

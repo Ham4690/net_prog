@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
   int *tharg;
   int i;
   pthread_t tid;
+  char str[256];
 
   /* 引数のチェックと使用法の表示 */
   if( argc != 3 ){
@@ -52,10 +53,15 @@ int main(int argc, char *argv[])
     }
 
   }
-  for(;;){
-
+  
+  while(1){
+    printf("-->");
+    fgets(str,sizeof(str), stdin);
+    str[strlen(str)-1]='\0';
+    if(strcmp(str,"exit")==0){
+     break;
+    }
   }
-
 }
 
 /* スレッドの本体 */

@@ -47,23 +47,14 @@ void init_client(int sock_listen, int n_client)
 
 }
 
-void question_loop()
+void communication_loop()
 {
   char *question;
 
   for(;;){
-    /* 問題文の作成 */
-//    question = make_question();
-
-    /* 問題の送信 */
-//    send_question( question );
-
     start_chat();
-    /* 解答の受信 */
-    recv_msg();
 
-    /* 結果の表示 */
-//    send_result();
+    recv_msg();
   }
 }
 
@@ -141,8 +132,6 @@ static void recv_msg()
       FD_SET(Client[client_id].sock,&mask);
   }
 
-// answered = 正解した回答者数
-  answered = 0;
 
   while(1){
 
@@ -150,7 +139,7 @@ static void recv_msg()
     readfds = mask;
     select( Max_sd+1, &readfds, NULL, NULL, NULL );
 
-//全員に対し,もし〜番のクライアントが入力してたら。。という文
+  //全員に対し,もし〜番のクライアントが入力してたら。。という文
     for( client_id=0; client_id<N_client; client_id++ ){
 
       if( FD_ISSET(Client[client_id].sock, &readfds) ){
@@ -166,21 +155,21 @@ static void recv_msg()
   }
 }
 
-static void send_result()
-{
-  int rank, client_id;
-  int len;
+// static void send_result()
+// {
+//   int rank, client_id;
+//   int len;
 
-  for(rank=0; rank<N_client; rank++){
-    /* 順位を表す文字列を作成 */
-    len=snprintf(Buf, BUFLEN, "[%d]\t%s\n",rank+1,Client[ Ranking[rank]].name);
+//   for(rank=0; rank<N_client; rank++){
+//     /* 順位を表す文字列を作成 */
+//     len=snprintf(Buf, BUFLEN, "[%d]\t%s\n",rank+1,Client[ Ranking[rank]].name);
 
-    /* 順位データを送信する */
-    for(client_id=0; client_id<N_client; client_id++){
-      Send(Client[client_id].sock, Buf, len, 0);
-    }
-  }
-}
+//     /* 順位データを送信する */
+//     for(client_id=0; client_id<N_client; client_id++){
+//       Send(Client[client_id].sock, Buf, len, 0);
+//     }
+//   }
+// }
 
 static char *chop_nl(char *s)
 {

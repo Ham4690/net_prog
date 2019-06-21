@@ -27,12 +27,16 @@ void child_process(int sock_listen,int *sock_accepted){
 void parrent_process(pid_t child,int *child_pid,int count,int sock_accepted){
   printf("Client is accepted.[%d]\n", child);
   child_pid[count]=child;
-//  close(sock_accepted);
+  close(sock_accepted);
 }
 
 void failed_fork(sock_listen){
   close(sock_listen);
   exit_errmesg("fork()");
+}
+
+void cmnd_check(){
+
 }
 
 int main(int argc, char *argv[])
@@ -63,7 +67,6 @@ int main(int argc, char *argv[])
   for(count=0;count<child_number;count++){
     
     if( (child=fork() ) == 0 ){
-      printf("test\n");
       child_process(sock_listen,&sock_accepted);
     }else if( child > 0 ){
       parrent_process(child,child_pid,count,sock_accepted);
@@ -78,26 +81,19 @@ int main(int argc, char *argv[])
   }
 
   while(1){
+    printf("-->");
     fgets(str,sizeof(str), stdin);
     str[strlen(str)-1]='\0';
-    printf("%s\n",str);
     if(strcmp(str,"exit")==0){
       for(i=0;i<count;i++){
-            sprintf(cmnd,"kill %d",child_pid[i]);
-            system(cmnd);
-      }
-      break;
-    }
-  }
-
-
-  printf("kill start\n");
-
-  for(i=0;i<count;i++){
+        printf("kill child. [%d]\n", child_pid[i]);
         sprintf(cmnd,"kill %d",child_pid[i]);
         system(cmnd);
+      }
+       break;
+    }
   }
-  
+ 
   free(child_pid);
 
-}
+} 

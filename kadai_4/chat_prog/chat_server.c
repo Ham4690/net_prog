@@ -1,7 +1,7 @@
 /*
   quiz_server.c
 */
-#include "chat.h"
+  #include "chat.h"
 #include "mynet.h"
 #include <stdlib.h>
 #include <unistd.h>
@@ -22,6 +22,6 @@ void quiz_server(int port_number, int n_client)
 
   /* メインループ */
   //実際のサーバの処理内容
-  question_loop();
+  communication_loop();
 
 }

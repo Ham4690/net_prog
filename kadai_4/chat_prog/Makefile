@@ -6,10 +6,10 @@ MYLIB=-lmynet
 CFLAGS=-I${MYLIBDIR} -L${MYLIBDIR}
 OBJS=chat.o chat_server.o chat_client.o chat_util.o question.o chat_common.o
 
-all: quiz
+all:chat 
 
 quiz: ${OBJS}
 	${CC} ${CFLAGS} -o $@ $^ ${MYLIB}
 
 clean:
-	${RM} *.o quiz *~
+	${RM} *.o chat *~

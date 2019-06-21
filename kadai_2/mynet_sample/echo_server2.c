@@ -1,7 +1,8 @@
 #include <mynet.h>
 
 #define PORT 50000         /* ポート番号 ←適当に書き換える */
-#define BUFSIZE 50   /* バッファサイズ */
+//#define BUFSIZE 50   /* バッファサイズ */
+#define BUFSIZE 1   /* バッファサイズ */
 
 int main()
 {
