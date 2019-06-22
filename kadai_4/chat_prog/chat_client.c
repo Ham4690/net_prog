@@ -38,8 +38,9 @@ void chat_client(char* servername, int port_number)
       fgets(s_buf, S_BUFSIZE, stdin);
 
       if(strcmp(s_buf,"exit\n")==0){
+        strsize = strlen(s_buf);
+        Send(sock, s_buf, strsize, 0);
         printf("ok\n");
-        close(sock);
         exit(1);
       }
 

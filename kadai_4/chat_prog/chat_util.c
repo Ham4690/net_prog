@@ -92,8 +92,28 @@ static int client_login(int sock_listen)
 static void start_chat(){
   int client_id;
   char send_msg[100];
+  char add_msg[30];
   sprintf(send_msg,"--------------------------------------------------\n");
-//forで0->N_cliantまで回すと全員に送信できる.
+  for(client_id=0; client_id<N_client; client_id++){
+    Send( Client[client_id].sock, send_msg, strlen(send_msg),0);
+  }
+  sprintf(send_msg,"login:%s",Client[0].name);
+  for(client_id = 1; client_id<N_client; client_id++){
+    sprintf(add_msg,",%s",Client[client_id].name);
+    strcat(send_msg,add_msg);
+  }
+  // sprintf(add_msg,":If you want to end chat:exit\n");
+  for(client_id=0; client_id<N_client; client_id++){
+    Send( Client[client_id].sock, send_msg, strlen(send_msg),0);
+    // Send( Client[client_id].sock, add_msg, strlen(add_msg),0);
+  }
+
+  
+  sprintf(send_msg,"\nIf you want to end chat:exit\n");
+  for(client_id=0; client_id<N_client; client_id++){
+    Send( Client[client_id].sock, send_msg, strlen(send_msg),0);
+  }
+  sprintf(send_msg,"--------------------------------------------------\n");
   for(client_id=0; client_id<N_client; client_id++){
     Send( Client[client_id].sock, send_msg, strlen(send_msg),0);
   }
@@ -149,15 +169,10 @@ static void recv_msg()
         strsize = Recv(Client[client_id].sock, Buf, BUFLEN-1,0);
         if( strsize == 0 ){
           client_delete(mask,client_id);
-        //   FD_CLR(Client[client_id].sock,&mask);
-        //   if(client_id != N_client-1){
-        //     for(i=client_id;i<N_client-1;i++){
-        //       Client[i].sock = Client[i+1].sock;
-        //       strcpy(Client[i].name,Client[i+1].name);
-        //     }
-        //   }
-        //   N_client -= 1;
-         }else{
+        }else if(strcmp(Buf,"exit\n") == 0){
+          send_msg(Buf,client_id);
+          client_delete(mask,client_id);
+        }else{
           Buf[strsize]='\0';
           send_msg(Buf,client_id);
         }
