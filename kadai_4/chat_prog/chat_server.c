@@ -1,5 +1,5 @@
 /*
-  quiz_server.c
+  chat_server.c
 */
   #include "chat.h"
 #include "mynet.h"

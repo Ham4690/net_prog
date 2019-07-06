@@ -1,5 +1,5 @@
 #
-# Makefile for quiz_server and quiz_client
+# Makefile for chat_server and chat_client
 #
 MYLIBDIR=../netlib
 MYLIB=-lmynet

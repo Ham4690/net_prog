@@ -1,3 +1,6 @@
+/*
+  chat_common.c
+*/
 #include "mynet.h"
 
 int Accept(int s, struct sockaddr *addr, socklen_t *addrlen)
